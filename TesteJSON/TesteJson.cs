@@ -12,14 +12,25 @@ namespace TesteJSON
             _pdf = pdf;
         }
 
-        public byte[] Test()
+        public byte[] Test(string body, string header)
         {
             try
             {
+                
+                var options = new OptionsWkhtmltopdf()
+                {
+                    HeaderHtml = header,
+                    PageOrientation = Wkhtmltopdf.NetCore.Options.Orientation.Landscape
+                };
+                _pdf.SetConvertOptions(options);
+                
                 string html = "<!DOCTYPE html>" +
                               "<html>" +
-                              "<head><meta charset='UTF-8'><title>TESTE</title></head>" +
-                              "<body> 123";
+                              "<head>" +
+                              "</head>" +
+                              "<body>";
+
+                html += body;
 
                 html += "</body>" +
                         "</html>";

@@ -5,7 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddWkhtmltopdf();
@@ -19,7 +18,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+
+/*app.MapWhen(context => {
+        var url = context.Request.Path.Value;
+        return (context.Request.Host.Host != "localhost") && !context.Request.IsHttps;
+    },
+    subapp => subapp.UseHttpsRedirection());*/
+
+
+app.UseDefaultFiles();
+
+app.UseStaticFiles();
+
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

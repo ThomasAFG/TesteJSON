@@ -5,23 +5,38 @@ namespace TesteJSON.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TesteController: ControllerBase
+    public class TesteController: Controller
     {
         protected internal readonly IGeneratePdf _pdf;
-
+       
         public TesteController(IGeneratePdf pdf)
         {
             _pdf = pdf;
         }
 
-        [HttpGet("teste")]
-        public IActionResult Teste()
+        [HttpGet("index")]
+        public ActionResult Index(string nome)
         {
-            byte[] bytes = new TesteJson(_pdf).Test();
+            ViewBag.Nome = nome;
+            return View("Header");
+        }
+
+        [HttpGet("teste")]
+        public async Task<IActionResult> Teste()
+        {
+            string header = @"http://localhost:5021/Teste/index?nome=" + "ChuckNorris";
+
+            string body = "";
+            for (int i=0; i < 1000; i++)
+            {
+                body += "<span>" + i.ToString() + "</span><br>";
+            }
+
+            byte[] bytes = new TesteJson(_pdf).Test(body,header);
             Stream stream = new MemoryStream(bytes);
             return new FileStreamResult(stream, "application/pdf")
             {
-                FileDownloadName = "FileasStream.pdf"
+                FileDownloadName = DateTime.Now.ToString("dd_MM_yy_hh_mm")+".pdf"
             };
         }
     }
